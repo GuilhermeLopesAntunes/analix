@@ -1,0 +1,136 @@
+@baseUrl = http://localhost:3001
+
+@authToken = {{Authentication.response.body.access_token}}
+
+@refresh_token = {{Authentication.response.body.refresh_token}}
+GET {{baseUrl}}/manifestacoes/
+Authorization: Bearer {{authToken}}
+###
+# 
+GET {{baseUrl}}/manifestacoes/teste/teste
+###
+POST {{baseUrl}}/manifestacoes
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "protocolo": "132131dasdsdafssda245",
+    "dataManifestacao": "2024-11-10",
+    "processoSei": "link",
+    "status": "aguardando",
+    "arquivo": "arquivo",
+    "idEtiqueta": 6
+}
+###
+
+PATCH {{baseUrl}}/manifestacoes/7
+Content-Type: application/json
+
+{
+    "status": "aguardando"
+}
+### 
+DELETE {{baseUrl}}/manifestacoes/8
+
+### Foto da pessoa
+POST {{baseUrl}}/manifestacoes/upload-manifest/
+Content-Type: multipart/form-data; boundary=----BoundaryDelimiterHttp
+
+------BoundaryDelimiterHttp
+Content-Disposition: form-data; name="file"; filename="abc.jpg"
+Content-Type: image/image/jpeg
+
+< ./dev/images/abc.jpg
+------BoundaryDelimiterHttp--
+### Ver FOto
+GET {{baseUrl}}/pictures/38.jpg
+
+###
+POST {{baseUrl}}/manifestacoes/upload-manifest
+Content-Type: multipart/form-data
+
+file: arquivo.pdf
+
+###
+GET {{baseUrl}}/users/
+Authorization: Bearer {{authToken}}
+###
+GET {{baseUrl}}/users/6
+Authorization: Bearer {{authToken}}
+###
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Guilherme Lopes Antunes",
+    "email": "guilhermelantunes1234@gmail.com",
+    "password": "123456",
+    "routePolicies": "user"
+    
+}
+###
+
+PATCH {{baseUrl}}/users/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "routePolicies" : "admin"
+}
+### 
+DELETE {{baseUrl}}/users/3
+Authorization: Bearer {{authToken}}
+
+###
+POST {{baseUrl}}/label
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "name": "Padrãodsa",
+    "colorRgb": "#DSAwqeD"
+    
+}
+###
+PATCH {{baseUrl}}/label/5
+Content-Type: application/json
+
+{
+    "name": "Padrãos",
+    "idUser": 2,
+    "colorRgb": "#DSAwqeD"
+    
+}
+###
+GET {{baseUrl}}/label
+###
+
+GET {{baseUrl}}/label/5
+###
+
+DELETE {{baseUrl}}/label/5
+###
+
+PATCH {{baseUrl}}/manifestacoes/9/label
+Content-Type: application/json
+
+{
+    "labelId": 6
+}
+###
+# @name Authentication
+POST {{baseUrl}}/auth/
+Content-Type: application/json
+
+{
+    "email": "guilhermelantunes1234@gmail.com",
+    "password": "123456"
+}
+###
+# @name reAuthentication
+POST {{baseUrl}}/auth/refresh/
+Content-Type: application/json
+
+{
+    "refresh_token": "{{refresh_token}}"
+}

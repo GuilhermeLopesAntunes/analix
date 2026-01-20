@@ -1,0 +1,24 @@
+import { apiFetch, clearTokens } from './api';
+
+export async function login(email: string, password: string) {
+  const response = await apiFetch('/auth', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await response.json();
+
+  if (!data.access_token || !data.refresh_token) {
+    throw new Error('Tokens inválidos');
+  }
+
+  localStorage.setItem('access_token', data.access_token);
+  localStorage.setItem('refresh_token', data.refresh_token);
+
+  return data;
+}
+
+export function logout() {
+  clearTokens();
+  window.location.href = '/login';
+}
