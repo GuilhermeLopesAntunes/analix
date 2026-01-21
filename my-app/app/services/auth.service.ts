@@ -1,4 +1,14 @@
 import { apiFetch, clearTokens } from './api';
+import { jwtDecode } from 'jwt-decode';
+
+
+interface JwtPayload {
+  sub: number;
+  email: string;
+  routePolicies: string;
+  exp: number;
+  iat: number;
+}
 
 export async function login(email: string, password: string) {
   const response = await apiFetch('/auth', {
@@ -21,4 +31,12 @@ export async function login(email: string, password: string) {
 export function logout() {
   clearTokens();
   window.location.href = '/login';
+}
+
+export function getUserRoutePolicies() {
+  const token = localStorage.getItem('access_token');
+  if (!token) return null;
+
+  const decoded = jwtDecode<JwtPayload>(token);
+  return decoded.routePolicies;
 }

@@ -40,7 +40,7 @@ export class ManifestacoesController {
   }
 
   @Get()
-  @SetRoutePolicy(RoutePolices.admin)
+  //@SetRoutePolicy(RoutePolices.admin)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.manifestacoesService.findAll(paginationDto);
   }

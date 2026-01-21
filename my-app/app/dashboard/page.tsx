@@ -16,7 +16,8 @@ import {
   CirclePlus,
   LayoutDashboard,
   Tag,
-  LogOut
+  LogOut,
+  Settings2
 } from "lucide-react";
 
 import { ThemeToggle } from "../theme-toggle";
@@ -40,13 +41,14 @@ import {
   listLabels,
   createLabel,
 } from "@/app/services/label.service";
-import { logout } from "../services/auth.service";
+import { getUserRoutePolicies, logout } from "../services/auth.service";
 import { SucessAction } from "../components/sucessfulAction";
 
 interface User {
   id: number;
   name: string;
   email: string;
+  routePolicies: string;
 }
 
 interface Label {
@@ -148,6 +150,8 @@ export default function Painel() {
 const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 async function handleCreateLabel(data: { name: string; colorRgb: string }) {
   try {
+    const role = getUserRoutePolicies();
+    console.log(role);
     const result = await createLabel(data);
 
     if (result.status === 201) {
@@ -298,8 +302,9 @@ async function handleCreateLabel(data: { name: string; colorRgb: string }) {
             
             <span className="text-[#8B8B8B] font-bold dark:text-[#FFFFFF] mt-10 transition-all duration-300">PRINCIPAL</span>
             <Link href={"/dashboard"} className="flex gap-3 p-3 bg-[#EEEEEE] dark:bg-[#86A1FB] rounded-2xl transition-all duration-300"><LayoutDashboard className="text-[#8B8B8B] dark:text-[#FFFF]"/> <span className="text-[#8B8B8B] dark:text-[#FFFF]">Painel Principal</span></Link>
-            
+            {getUserRoutePolicies() === 'admin' && <button className="flex gap-3 p-3 bg-[#EEEEEE] dark:bg-[#86A1FB] rounded-2xl transition-all duration-300"><Settings2 className="text-[#8B8B8B] dark:text-[#FFFF]" /> <span className="text-[#8B8B8B] dark:text-[#FFFF]">Painel Gerencial</span> </button>}
           </div>
+          
 
           <div>
             

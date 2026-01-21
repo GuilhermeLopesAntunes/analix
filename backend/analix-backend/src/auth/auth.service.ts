@@ -61,6 +61,7 @@ export class AuthService {
       this.jwtConfiguration.jwtTtl,
       {
         email: user?.email,
+        routePolicies: user?.routePolicies,
       },
     );
     const refresh_token = await this.signJwtAsync(
