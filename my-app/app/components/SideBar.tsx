@@ -20,7 +20,7 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Sidebar */}
+
       <div
         className={`relative bg-[#F6F6F6] dark:bg-[#242424]
         border-r h-full transition-all duration-300
@@ -30,7 +30,6 @@ export default function Sidebar() {
           className={`px-12 py-12 transition-opacity duration-200
           ${aberto ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         >
-          {/* Logo */}
           <div className="flex justify-between items-center">
             <Link href="/dashboard">
               <Image
@@ -50,8 +49,6 @@ export default function Sidebar() {
               <PanelLeftOpen className="text-gray-500" />
             </button>
           </div>
-
-          {/* Menu */}
           <div className="mt-16 flex flex-col gap-3">
 
             <ThemeToggle />
@@ -73,7 +70,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Botão abrir */}
       {!aberto && (
         <button
           onClick={() => setAberto(true)}

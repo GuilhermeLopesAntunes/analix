@@ -10,6 +10,7 @@ import { CreateLabelModal } from "@/app/components/CreateLabelModal";
 import { SucessAction } from "@/app/components/sucessfulAction";
 import SelectLabel from "@/app/components/SelectLabel"; // Importe o novo componente
 
+
 import {
   Pencil,
   Trash,
@@ -29,8 +30,10 @@ import {
 
 import {
   createLabel,
+  listLabels,
 } from "@/app/services/label.service";
 import { logout } from "@/app/services/auth.service";
+import ProtocolWithDescription from "../components/ProtocolWithDescription";
 
 interface User {
   id: number;
@@ -60,10 +63,12 @@ export interface Manifestacao {
   status: string;
   arquivo: string;
   label?: Label;
+  desc?: string;
 }
 
 export default function Painel() {
   const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
+
   // REMOVA: const [labelSelectorOpen, setLabelSelectorOpen] = useState<number | null>(null);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -142,6 +147,7 @@ export default function Painel() {
         dataManifestacao: data.dataManifestacao,
         status: data.status,
         idEtiqueta: data.idEtiqueta,
+        desc: data.desc,
         arquivo: upload.path,
       });
 
@@ -307,7 +313,13 @@ export default function Painel() {
                   />
                 </td>
 
-                <td>{m.protocolo}</td>
+                <td>
+                  <ProtocolWithDescription
+                    protocolo={m.protocolo}
+                    descricao={m.desc|| 'Sem descrição disponível'}
+                    className="font-medium"
+                  />
+                </td>
 
                 <td>{m.responsavel?.name}</td>
 
@@ -378,6 +390,8 @@ export default function Painel() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onCreate={handleCreateManifest}
+
+
       />
 
       <CreateLabelModal

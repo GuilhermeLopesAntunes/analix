@@ -14,11 +14,12 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "protocolo": "132131dasdsdafssda245",
+    "protocolo": "13213sd1dsdasdssdsdafssda245",
     "dataManifestacao": "2024-11-10",
     "processoSei": "link",
     "status": "aguardando",
     "arquivo": "arquivo",
+    "desc": "Descrição da denuncia",
     "idEtiqueta": 6
 }
 ###
@@ -103,6 +104,9 @@ Content-Type: application/json
 }
 ###
 GET {{baseUrl}}/label
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
 ###
 
 GET {{baseUrl}}/label/5

@@ -12,6 +12,8 @@ export class CreateManifestacoeDto {
   status: string;
   @IsString()
   arquivo: string;
+  @IsString()
+  desc: string;
   @IsPositive()
   idEtiqueta: number;
 }

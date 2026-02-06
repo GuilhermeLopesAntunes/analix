@@ -44,6 +44,7 @@ export class ManifestacoesService {
         status: createManifestacoeDto.status,
         arquivo: createManifestacoeDto.arquivo,
         periodo: periodo,
+        desc: createManifestacoeDto.desc,
         responsavel,
       };
       const newManifestacao =
