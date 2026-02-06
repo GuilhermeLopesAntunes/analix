@@ -1,4 +1,3 @@
-import { Manifestacao } from '../dashboard/page';
 import { apiFetch } from './api';
 
 const BASE_URL = 'http://localhost:3001';
