@@ -55,6 +55,7 @@ export class AuthService {
     }
     return this.createTokens(user);
   }
+
   private async createTokens(user: User) {
     const access_token = await this.signJwtAsync<Partial<User>>(
       user.id,
@@ -73,6 +74,7 @@ export class AuthService {
       refresh_token,
     };
   }
+
   private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
     return await this.jwtService.signAsync(
       {

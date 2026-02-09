@@ -14,20 +14,23 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "protocolo": "132131dasdsdafssda245",
+    "protocolo": "13213sd1dsdasdssdsdafssda245",
     "dataManifestacao": "2024-11-10",
     "processoSei": "link",
     "status": "aguardando",
     "arquivo": "arquivo",
+    "desc": "Descrição da denuncia",
     "idEtiqueta": 6
 }
 ###
 
-PATCH {{baseUrl}}/manifestacoes/7
+PATCH {{baseUrl}}/manifestacoes/10
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "status": "aguardando"
+    "protocolo": "123",
+    "desc": "mudei2"
 }
 ### 
 DELETE {{baseUrl}}/manifestacoes/8
@@ -63,9 +66,9 @@ Content-Type: application/json
 
 {
     "name": "Guilherme Lopes Antunes",
-    "email": "guilhermelantunes1234@gmail.com",
+    "email": "guilhermelantunes123@gmail.com",
     "password": "123456",
-    "routePolicies": "user"
+    "routePolicies": "admin"
     
 }
 ###
@@ -103,6 +106,9 @@ Content-Type: application/json
 }
 ###
 GET {{baseUrl}}/label
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
 ###
 
 GET {{baseUrl}}/label/5

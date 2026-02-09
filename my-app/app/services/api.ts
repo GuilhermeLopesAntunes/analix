@@ -1,4 +1,8 @@
+
+
 const BASE_URL = 'http://localhost:3001';
+
+
 
 export function getAccessToken() {
   if (typeof window === 'undefined') return null;
@@ -11,8 +15,10 @@ export function getRefreshToken() {
 }
 
 export function clearTokens() {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
+ 
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
 }
 
 async function refreshToken() {
@@ -20,7 +26,9 @@ async function refreshToken() {
 
   if (!refresh_token) {
     clearTokens();
-    window.location.href = '/login';
+    
+      window.location.href = '/login';
+ 
     throw new Error('Refresh token ausente');
   }
 
@@ -34,14 +42,18 @@ async function refreshToken() {
 
   if (!response.ok) {
     clearTokens();
-    window.location.href = '/login';
+  
+      window.location.href = '/login';
+    
     throw new Error('Refresh token inválido');
   }
 
   const data = await response.json();
 
-  localStorage.setItem('access_token', data.access_token);
-  localStorage.setItem('refresh_token', data.refresh_token);
+  
+    localStorage.setItem('access_token', data.access_token);
+    localStorage.setItem('refresh_token', data.refresh_token);
+  
 
   return data.access_token;
 }

@@ -33,6 +33,9 @@ export class Manifestacoe {
   arquivo: string;
   @CreateDateColumn()
   createdAt?: Date;
+  @Column()
+  @IsString()
+  desc: string;
   @UpdateDateColumn()
   updatedAt?: Date;
 }
