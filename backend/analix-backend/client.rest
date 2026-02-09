@@ -24,11 +24,13 @@ Content-Type: application/json
 }
 ###
 
-PATCH {{baseUrl}}/manifestacoes/7
+PATCH {{baseUrl}}/manifestacoes/10
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "status": "aguardando"
+    "protocolo": "123",
+    "desc": "mudei2"
 }
 ### 
 DELETE {{baseUrl}}/manifestacoes/8
@@ -64,9 +66,9 @@ Content-Type: application/json
 
 {
     "name": "Guilherme Lopes Antunes",
-    "email": "guilhermelantunes1234@gmail.com",
+    "email": "guilhermelantunes123@gmail.com",
     "password": "123456",
-    "routePolicies": "user"
+    "routePolicies": "admin"
     
 }
 ###

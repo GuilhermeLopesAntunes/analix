@@ -26,6 +26,8 @@ import {
   updateStatus,
   removeManifest,
   uploadManifestFile,
+  updateManifest,
+  updateManifestFile,
 } from "@/app/services/manifest.service";
 
 import {
@@ -34,6 +36,7 @@ import {
 } from "@/app/services/label.service";
 import { logout } from "@/app/services/auth.service";
 import ProtocolWithDescription from "../components/ProtocolWithDescription";
+import { EditManifestModal } from "../components/EditManifestModal";
 
 interface User {
   id: number;
@@ -69,17 +72,21 @@ export interface Manifestacao {
 export default function Painel() {
   const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
 
-  // REMOVA: const [labelSelectorOpen, setLabelSelectorOpen] = useState<number | null>(null);
-
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showLabelModal, setShowLabelModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [manifestIdToDelete, setManifestIdToDelete] = useState<number | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedManifest, setSelectedManifest] = useState<Manifestacao | null>(null);
+
 
   const [filter, setFilter] = useState<'todas' | 'andamento' | 'concluidas'>('todas');
   const [results, setResults] = useState<User[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [action, setAction] = useState<'Etiqueta' | 'Manifestação' | 'ação'>('ação');
+
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [selectedLabel, setSelectedLabel] = useState<string>('todas');
 
   const todasRef = useRef<HTMLButtonElement>(null);
   const andamentoRef = useRef<HTMLButtonElement>(null);
@@ -103,6 +110,18 @@ export default function Painel() {
     }
   }, [filter]);
 
+  async function loadLabels() {
+    const data = await listLabels();
+    setLabels(Array.isArray(data) ? data : []);
+  }
+
+  function handleOpenEdit(manifest: Manifestacao) {
+    setSelectedManifest(manifest);
+    setShowEditModal(true);
+  }
+
+
+
   async function loadManifestacoes() {
     const data = await listManifest();
     setManifestacoes(Array.isArray(data) ? data : []);
@@ -110,9 +129,44 @@ export default function Painel() {
 
   useEffect(() => {
     loadManifestacoes();
+    loadLabels();
   }, []);
 
   const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  async function handleEditManifest(data: any) {
+  try {
+
+    let filePath = selectedManifest?.arquivo;
+
+    if (data.file) {
+      const upload = await updateManifestFile(data.id, data.file);
+      filePath = upload.path;
+    }
+
+
+    await updateManifest({
+      id: data.id,
+      protocolo: data.protocolo,
+      processoSei: data.processoSei,
+      dataManifestacao: data.dataManifestacao,
+      status: data.status,
+      desc: data.desc,
+    });
+
+    await loadManifestacoes();
+
+    setShowEditModal(false);
+    setSelectedManifest(null);
+
+    setAction('Manifestação');
+    setShowSuccess(true);
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 
   async function handleCreateLabel(data: { name: string; colorRgb: string }) {
     try {
@@ -191,10 +245,21 @@ export default function Painel() {
   }
 
   const manifestacoesFiltradas = manifestacoes.filter(m => {
-    if (filter === 'andamento') return m.status === 'aguardando';
-    if (filter === 'concluidas') return m.status === 'completo';
-    return true;
-  });
+
+  if (filter === 'andamento' && m.status !== 'aguardando') return false;
+  if (filter === 'concluidas' && m.status !== 'completo') return false;
+
+
+  if (
+    selectedLabel !== 'todas' &&
+    m.label?.id !== Number(selectedLabel)
+  ) {
+    return false;
+  }
+
+  return true;
+});
+
 
   const total = manifestacoes.length;
   const andamento = manifestacoes.filter(m => m.status === 'aguardando').length;
@@ -246,7 +311,21 @@ export default function Painel() {
           <PrincipalCardNumber phrase="Manifestações em andamento" color="bg-[#FBCA86]" value={andamento} />
           <PrincipalCardNumber phrase="Manifestações concluídas" color="bg-[#90FB86]" value={concluido} />
         </div>
+        
+        <select
+          value={selectedLabel}
+          onChange={(e) => setSelectedLabel(e.target.value)}
+          className="mt-6 px-4 py-2 rounded-xl border border-gray-300 dark:bg-[#1f1f1f]"
+        >
+          <option value="todas">Filtrar Por Etiqueta</option>
 
+          {labels.map(label => (
+            <option key={label.id} value={label.id} style={{ background: label.colorRgb, fontWeight: "bold"}}>
+              {label.name}
+            </option>
+          ))}
+        </select>
+        
         <div className="relative flex gap-10 mt-12">
           <button
             onClick={() => setFilter('todas')}
@@ -305,7 +384,6 @@ export default function Painel() {
                 className="text-center h-14 dark:border-[#494848] border-[#EAEAEA] border dark:text-white"
               >
                 <td className="text-center">
-                  {/* USANDO O NOVO COMPONENTE */}
                   <SelectLabel
                     manifestId={m.id}
                     currentLabel={m.label}
@@ -368,7 +446,7 @@ export default function Painel() {
 
                 <td>
                   <div>
-                    <button className="mr-4 cursor-pointer">
+                    <button className="mr-4 cursor-pointer" onClick={() => handleOpenEdit(m)}>
                       <Pencil className="text-[#1C1B1F] dark:text-white" />
                     </button>
 
@@ -404,6 +482,12 @@ export default function Painel() {
         isOpen={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={handleConfirmDelete}
+      />
+      <EditManifestModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onEdit={handleEditManifest}
+        manifest={selectedManifest}
       />
     </div>
   );

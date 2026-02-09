@@ -32,7 +32,6 @@ export function CreateLabelModal({
       colorRgb,
     });
 
-    // reset local
     setName('');
     setColorRgb('#000000');
     onClose();

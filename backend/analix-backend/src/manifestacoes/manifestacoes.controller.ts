@@ -35,8 +35,11 @@ export class ManifestacoesController {
 
   @Post()
   create(@Body() createManifestacoeDto: CreateManifestacoeDto,
-   @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
-    return this.manifestacoesService.create(createManifestacoeDto, tokenPayload);
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
+    return this.manifestacoesService.create(
+      createManifestacoeDto,
+      tokenPayload,
+    );
   }
 
   @Get()
@@ -70,7 +73,7 @@ export class ManifestacoesController {
     id: number,
     @Body('labelId')
     labelId: number,
-  ){
+  ) {
     return this.manifestacoesService.updateLabel(id, labelId);
   }
   @Post('upload-manifest')
@@ -84,5 +87,18 @@ export class ManifestacoesController {
     file: Express.Multer.File,
   ) {
     return this.manifestacoesService.uploadManifest(file);
+  }
+  @Patch(':id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateUpload(
+    @Param('id') id: number,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: 'application/pdf' })],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.manifestacoesService.updateUpload(id, file);
   }
 }

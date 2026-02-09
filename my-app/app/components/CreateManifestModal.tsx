@@ -37,7 +37,6 @@ export function CreateManifestModal({
   useEffect(() => {
     if (isOpen) {
       loadLabels();
-      // Resetar o form quando abrir o modal
       setForm({
         protocolo: '',
         processoSei: '',
@@ -77,7 +76,7 @@ export function CreateManifestModal({
       [e.target.name]: e.target.value,
     });
     
-    // Limpa erro do campo quando o usuário começa a digitar/selecionar
+
     if (formErrors[e.target.name]) {
       setFormErrors(prev => ({
         ...prev,
@@ -126,10 +125,9 @@ export function CreateManifestModal({
       return;
     }
 
-    // Preparar os dados para enviar
     const dataToSend = {
       ...form,
-      idEtiqueta: Number(form.idEtiqueta), // Converte para número
+      idEtiqueta: Number(form.idEtiqueta), 
       file,
     };
 
@@ -146,7 +144,7 @@ export function CreateManifestModal({
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          {/* Campo de etiqueta - OBRIGATÓRIO */}
+
           <div>
             <label className="block text-sm mb-1">
               Etiqueta <span className="text-red-500">*</span>
@@ -174,13 +172,11 @@ export function CreateManifestModal({
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                 </div>
               )}
-            </div>
-            {formErrors.idEtiqueta && (
-              <p className="text-red-500 text-sm mt-1">{formErrors.idEtiqueta}</p>
-            )}
+              </div>
+              {formErrors.idEtiqueta && (
+                <p className="text-red-500 text-sm mt-1">{formErrors.idEtiqueta}</p>
+              )}
           </div>
-
-          {/* Campo protocolo */}
           <div>
             <label className="block text-sm mb-1">
               Protocolo <span className="text-red-500">*</span>
@@ -199,8 +195,6 @@ export function CreateManifestModal({
               <p className="text-red-500 text-sm mt-1">{formErrors.protocolo}</p>
             )}
           </div>
-
-          {/* Campo data */}
           <div>
             <label className="block text-sm mb-1">
               Data da Manifestação <span className="text-red-500">*</span>
@@ -220,7 +214,6 @@ export function CreateManifestModal({
             )}
           </div>
 
-          {/* Campo processo SEI */}
           <div>
             <label className="block text-sm mb-1">
               Link do Processo SEI <span className="text-red-500">*</span>
@@ -240,7 +233,6 @@ export function CreateManifestModal({
             )}
           </div>
           
-          {/* Campo descrição */}
           <div>
             <label className="block text-sm mb-1">
               Descrição <span className="text-red-500">*</span>
@@ -260,7 +252,6 @@ export function CreateManifestModal({
             )}
           </div>
 
-          {/* Campo arquivo */}
           <div>
             <label className="block text-sm mb-1">
               Arquivo PDF <span className="text-red-500">*</span>
@@ -291,7 +282,6 @@ export function CreateManifestModal({
             )}
           </div>
 
-          {/* Campo hidden para status (já tem valor padrão) */}
           <input
             type="hidden"
             name="status"

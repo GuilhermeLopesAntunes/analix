@@ -65,14 +65,13 @@ export default function Tooltip({
           className={`absolute z-50 ${positionStyles[position]}`}
           style={{ maxWidth }}
         >
-          {/* Tooltip container */}
+
           <div className="relative">
-            {/* Seta do tooltip */}
+     
             <div
               className={`absolute w-0 h-0 border-4 border-transparent ${arrowStyles[position]}`}
             />
-            
-            {/* Conteúdo do tooltip */}
+   
             <div className="bg-black dark:bg-white text-white dark:text-black text-sm rounded-lg p-3 shadow-lg">
               {content}
             </div>

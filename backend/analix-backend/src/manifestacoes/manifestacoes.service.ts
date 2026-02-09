@@ -84,17 +84,25 @@ export class ManifestacoesService {
   async update(id: number, updateManifestacoeDto: UpdateManifestacoeDto) {
     const manifestacaoData = {
       status: updateManifestacoeDto.status,
+      protocolo: updateManifestacoeDto.protocolo,
+      desc: updateManifestacoeDto.desc,
+      processoSei: updateManifestacoeDto.processoSei,
+      dataManifestacao: updateManifestacoeDto.dataManifestacao
+        ? new Date(updateManifestacoeDto.dataManifestacao)
+        : undefined,
     };
+
     const manifestacao = await this.manifestacaoRepository.preload({
       id,
       ...manifestacaoData,
     });
+
     if (!manifestacao) {
-      throw new NotFoundException('manifestação não encontrada');
+      throw new NotFoundException('Manifestação não encontrada');
     }
+
     return this.manifestacaoRepository.save(manifestacao);
   }
-
   async remove(id: number) {
     const manifestacao = await this.manifestacaoRepository.findOneBy({
       id,
@@ -153,6 +161,46 @@ export class ManifestacoesService {
       mimetype: file.mimetype,
       size: file.size,
       path: `/uploads/manifestacoes/${fileName}`,
+    };
+  }
+
+  async updateUpload(id: number, file: Express.Multer.File) {
+    const manifest = await this.manifestacaoRepository.findOne({
+      where: { id },
+    });
+
+    if (!manifest) {
+      throw new NotFoundException('Manifestação não encontrada');
+    }
+    if (manifest.arquivo) {
+      const oldPath = path.resolve(
+        process.cwd(),
+        manifest.arquivo.replace(/^\/+/, ''),
+      );
+      try {
+        await fs.unlink(oldPath);
+      } catch (err) {
+        console.warn('Arquivo antigo não encontrado:', err.message);
+      }
+    }
+    const extension = path.extname(file.originalname).toLowerCase();
+    const fileName = `${randomUUID()}${extension}`;
+    const fullPath = path.resolve(
+      process.cwd(),
+      'uploads',
+      'manifestacoes',
+      fileName,
+    );
+
+    await fs.mkdir(path.dirname(fullPath), { recursive: true });
+
+    await fs.writeFile(fullPath, file.buffer);
+    const newPath = `/uploads/manifestacoes/${fileName}`;
+    manifest.arquivo = newPath;
+    await this.manifestacaoRepository.save(manifest);
+    return {
+      message: 'Arquivo atualizado com sucesso',
+      path: newPath,
     };
   }
 }

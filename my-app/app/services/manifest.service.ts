@@ -5,6 +5,49 @@ const BASE_URL = 'http://localhost:3001';
 export function listManifest() {
   return apiFetch('/manifestacoes').then(response => response.json());
 }
+export async function updateManifest(data: any) {
+
+  const payload = {
+    protocolo: data.protocolo,
+    processoSei: data.processoSei,
+    dataManifestacao: data.dataManifestacao,
+    status: data.status,
+    desc: data.desc,
+    arquivo: data.arquivo,
+  };
+
+  return apiFetch(`/manifestacoes/${data.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  }).then(r => r.json());
+}
+
+export async function updateManifestFile(id: number, file: File) {
+
+  const token = localStorage.getItem('access_token');
+
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  const response = await fetch(
+    `http://localhost:3001/manifestacoes/${id}/upload`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Erro ao atualizar arquivo');
+  }
+
+  return response.json();
+}
+
 
 export async function createManifest(data: any) {
   const response = await apiFetch('/manifestacoes', {

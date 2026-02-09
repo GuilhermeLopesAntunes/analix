@@ -24,7 +24,6 @@ export default function SelectLabel({
   const [open, setOpen] = useState(false);
   const [labels, setLabels] = useState<Label[]>([]);
 
-  // 👉 Ref do componente inteiro
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,7 +35,6 @@ export default function SelectLabel({
     load();
   }, []);
 
-  // 👉 CLICK FORA
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -65,7 +63,7 @@ export default function SelectLabel({
   return (
     <div ref={containerRef} className="relative inline-block">
 
-      {/* Botão */}
+ 
       <button
         onClick={() => setOpen(prev => !prev)}
         className="px-3 py-1 rounded-full text-white text-sm font-medium"
@@ -77,11 +75,11 @@ export default function SelectLabel({
         {currentLabel?.name || 'Sem etiqueta'}
       </button>
 
-      {/* Dropdown */}
+      
       {open && (
         <div
           className="
-            absolute z-50 mt-2 left-1/2 -translate-x-1/2
+            absolute z-50 mt-2 left-0
             bg-white dark:bg-[#2f2f2f]
             shadow-lg rounded-xl p-2 min-w-[160px]
 
