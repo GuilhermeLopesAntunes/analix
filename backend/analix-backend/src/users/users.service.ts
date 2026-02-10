@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { HashingService } from 'src/auth/hashing/hashing.service';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { RoutePolices } from 'src/auth/enum/route-policies.enum';
 
 @Injectable()
 export class UsersService {
@@ -59,6 +60,7 @@ export class UsersService {
   ) {
     const newData = {
       name: updateUserDto.name,
+      email: updateUserDto.email,
       routePolicies: updateUserDto.routePolicies,
     };
     if (updateUserDto?.password) {
@@ -75,8 +77,11 @@ export class UsersService {
       throw new NotFoundException('Pessoa não encontrada');
     }
 
-    if (user.id !== tokenPayload.sub) {
-      throw new ForbiddenException('Você não é essa pessoa');
+    if (
+      tokenPayload.routePolicies !== RoutePolices.admin /*&&
+      user.id !== tokenPayload.sub*/
+    ) {
+      throw new ForbiddenException('Sem permissão');
     }
 
     return this.userRepository.save(user);
@@ -87,8 +92,11 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('Pessoa Não Econtrado');
     }
-    if (user.id !== tokenPayload.sub) {
-      throw new ForbiddenException('Você não é essa pessoa');
+    if (
+      tokenPayload.routePolicies !== RoutePolices.admin /*&&
+      user.id !== tokenPayload.sub*/
+    ) {
+      throw new ForbiddenException('Sem permissão');
     }
     return this.userRepository.remove(user);
   }

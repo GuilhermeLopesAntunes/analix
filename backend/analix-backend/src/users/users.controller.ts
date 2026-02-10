@@ -16,7 +16,10 @@ import { ParseIntIdPipe } from 'src/common/pipes/parse-int-id.pipe';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-police.decorator';
+import { RoutePolices } from 'src/auth/enum/route-policies.enum';
 
+@SetRoutePolicy(RoutePolices.admin)
 @Controller('users')
 @UsePipes(ParseIntIdPipe)
 export class UsersController {
